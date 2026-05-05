@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Digital Breadboard</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">01</div>
+        <div>
+          <h1>Digital Breadboard</h1>
+          <p>Build circuits from power and parts</p>
+        </div>
+      </div>
+
+      <section class="panel">
+        <h2>Primitives</h2>
+        <button class="palette-item" data-type="battery" draggable="true" type="button">
+          <span class="battery-icon">+ -</span>
+          Battery
+        </button>
+        <button class="palette-item" data-type="switch" draggable="true" type="button">
+          <span class="icon switch-icon"></span>
+          Switch
+        </button>
+        <button class="palette-item" data-type="bulb" draggable="true" type="button">
+          <span class="icon bulb-icon"></span>
+          Bulb
+        </button>
+      </section>
+
+      <section class="panel">
+        <h2>Simulation</h2>
+        <label class="range-label" for="tickSpeed">
+          Tick speed
+          <output id="tickOutput">2 Hz</output>
+        </label>
+        <input id="tickSpeed" type="range" min="1" max="20" value="2" />
+        <div class="tick-light" id="tickLight" aria-label="Clock tick indicator"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Circuit</h2>
+        <button id="clearWires" class="secondary-action" type="button">Clear Wires</button>
+        <button id="resetCircuit" class="secondary-action" type="button">Empty Board</button>
+        <button id="loadStarter" class="secondary-action" type="button">Load Starter Loop</button>
+      </section>
+    </aside>
+
+    <main class="workspace-shell">
+      <header class="toolbar">
+        <div>
+          <h2>Battery, Switch, Bulb</h2>
+          <p>Click a terminal, click the board to place cable points, then click another terminal to finish the wire.</p>
+        </div>
+        <div class="status-pill" id="simStatus">Running</div>
+      </header>
+
+      <section class="workspace" id="workspace" aria-label="Circuit workspace">
+        <svg class="wires" id="wires" aria-hidden="true"></svg>
+        <div class="grid"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
