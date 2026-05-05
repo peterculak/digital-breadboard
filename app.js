@@ -75,7 +75,6 @@ function createPart(type, x, y) {
   workspace.append(element);
 
   part.element = element;
-  attachPartDelete(part);
   state.parts.push(part);
   movePart(part, x, y);
   attachDrag(part);
@@ -177,6 +176,10 @@ function clearSelectedTerminal() {
 function attachDrag(part) {
   const header = part.element.querySelector(".part-header");
   header.addEventListener("pointerdown", (event) => {
+    if (event.target.closest(".part-delete")) {
+      return;
+    }
+
     const start = {
       pointerX: event.clientX,
       pointerY: event.clientY,
@@ -205,15 +208,6 @@ function attachDrag(part) {
     header.addEventListener("pointermove", onMove);
     header.addEventListener("pointerup", onUp);
     header.addEventListener("pointercancel", onUp);
-  });
-}
-
-function attachPartDelete(part) {
-  const deleteButton = part.element.querySelector(".part-delete");
-  if (!deleteButton) return;
-  deleteButton.addEventListener("click", (event) => {
-    event.stopPropagation();
-    removePart(part.id);
   });
 }
 
@@ -546,6 +540,11 @@ workspace.addEventListener("drop", (event) => {
 });
 
 workspace.addEventListener("pointerdown", (event) => {
+  if (event.target.closest(".part-delete")) {
+    event.stopPropagation();
+    return;
+  }
+
   if (event.target.classList.contains("terminal")) return;
 
   if (state.selectedTerminal) {
@@ -561,6 +560,16 @@ workspace.addEventListener("pointerdown", (event) => {
   if (event.target === workspace || event.target.classList.contains("grid")) {
     clearSelectedTerminal();
   }
+});
+
+workspace.addEventListener("click", (event) => {
+  const deleteButton = event.target.closest(".part-delete");
+  if (!deleteButton) return;
+  event.preventDefault();
+  event.stopPropagation();
+  const partElement = deleteButton.closest(".part");
+  if (!partElement?.dataset.partId) return;
+  removePart(partElement.dataset.partId);
 });
 
 workspace.addEventListener("pointermove", (event) => {
