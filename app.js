@@ -62,7 +62,10 @@ function createPart(type, x, y) {
   element.innerHTML = `
     <div class="part-header">
       <span>${config.label}</span>
-      <span>${type.toUpperCase()}</span>
+      <div class="part-actions">
+        <span>${type.toUpperCase()}</span>
+        <button class="part-delete" type="button" aria-label="Remove ${config.label}">x</button>
+      </div>
     </div>
     <div class="part-body"></div>
   `;
@@ -72,6 +75,7 @@ function createPart(type, x, y) {
   workspace.append(element);
 
   part.element = element;
+  attachPartDelete(part);
   state.parts.push(part);
   movePart(part, x, y);
   attachDrag(part);
@@ -201,6 +205,15 @@ function attachDrag(part) {
     header.addEventListener("pointermove", onMove);
     header.addEventListener("pointerup", onUp);
     header.addEventListener("pointercancel", onUp);
+  });
+}
+
+function attachPartDelete(part) {
+  const deleteButton = part.element.querySelector(".part-delete");
+  if (!deleteButton) return;
+  deleteButton.addEventListener("click", (event) => {
+    event.stopPropagation();
+    removePart(part.id);
   });
 }
 
@@ -416,6 +429,22 @@ function getTerminalElement(partId, terminalId) {
 
 function findPart(partId) {
   return state.parts.find((part) => part.id === partId);
+}
+
+function removePart(partId) {
+  const part = findPart(partId);
+  if (!part) return;
+
+  if (state.selectedTerminal?.partId === partId) {
+    clearSelectedTerminal();
+  }
+
+  state.wires = state.wires.filter(
+    (wire) => wire.from.partId !== partId && wire.to.partId !== partId,
+  );
+  state.parts = state.parts.filter((candidate) => candidate.id !== partId);
+  part.element.remove();
+  evaluateCircuit();
 }
 
 function clearBoard() {

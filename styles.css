@@ -326,6 +326,32 @@ input[type="range"] {
   cursor: grab;
 }
 
+.part-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.part-delete {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #ccbfa8;
+  border-radius: 4px;
+  background: #fff8ea;
+  color: #8b5e34;
+  font-size: 12px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+
+.part-delete:hover {
+  background: #fde9d4;
+  border-color: #d6a26c;
+}
+
 .part.dragging .part-header {
   cursor: grabbing;
 }
